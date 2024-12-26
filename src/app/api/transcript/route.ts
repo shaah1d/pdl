@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     const transcript: TranscriptEntry[] = await YoutubeTranscript.fetchTranscript(videoId);
     const texts = transcript.map((entry) => entry.text);
     const para = texts.join(" ");
- 
+    console.log(para);
     const prompt = `You are an advanced AI designed to interpret video transcripts and generate detailed summaries. Your task is to provide a comprehensive explanation of the video content based on its transcript and the user-supplied context.
 
 Task Instructions:
