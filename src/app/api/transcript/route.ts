@@ -35,11 +35,9 @@ export async function GET(req: NextRequest) {
     const texts = transcript.map((entry) => entry.text);
     const para = texts.join(" ");
 
-    if (!process.env.GEMINI_KEY) {
-      console.error('GEMINI_KEY not found in environment');
-      return NextResponse.json({ error: 'Configuration error' }, { status: 500 });
-    }
-
+    // Log before Gemini API call
+    console.log('About to call Gemini API');
+    
     const prompt = `You are an advanced AI designed to interpret video transcripts and generate detailed summaries. Your task is to provide a comprehensive explanation of the video content based on its transcript and the user-supplied context.
 
 Task Instructions:
@@ -61,16 +59,31 @@ Conclusion: Wrap up with how the content addresses the purpose and offers value 
 
 Here is the transcript: ${para}`;
     const result = await model.generateContent(prompt);
-    const output = result.response.text();
     
+    // Log after Gemini API call
+    console.log('Gemini API call successful');
+    
+    const output = result.response.text();
     return NextResponse.json(output);
+
   } catch (error: any) {
-    console.error('Transcript fetch error:', {
+    // Detailed error logging
+    console.error('Full error details:', {
       videoId,
       errorMessage: error.message,
+      errorName: error.name,
       errorStack: error.stack,
-      errorName: error.name
+      isGeminiError: error.name === 'GoogleGenerativeAIError',
+      fullError: JSON.stringify(error)
     });
+
+    // Specific error handling
+    if (error.name === 'GoogleGenerativeAIError') {
+      return NextResponse.json(
+        { error: 'AI processing failed: ' + error.message },
+        { status: 500 }
+      );
+    }
 
     if (error.message.includes('Could not get transcripts')) {
       return NextResponse.json(
@@ -80,8 +93,13 @@ Here is the transcript: ${para}`;
     }
 
     return NextResponse.json(
-      { error: `Failed to fetch transcript: ${error.message}` },
+      { 
+        error: 'Server error',
+        details: error.message,
+        type: error.name 
+      },
       { status: 500 }
     );
   }
 }
+
