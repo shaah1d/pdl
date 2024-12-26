@@ -24,10 +24,22 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    console.log(`Attempting to fetch transcript for video: ${videoId}`);
+    
     const transcript: TranscriptEntry[] = await YoutubeTranscript.fetchTranscript(videoId);
+    if (!transcript || transcript.length === 0) {
+      console.error('Empty transcript received');
+      return NextResponse.json({ error: 'No transcript available' }, { status: 404 });
+    }
+
     const texts = transcript.map((entry) => entry.text);
     const para = texts.join(" ");
-    console.log(para);
+
+    if (!process.env.GEMINI_KEY) {
+      console.error('GEMINI_KEY not found in environment');
+      return NextResponse.json({ error: 'Configuration error' }, { status: 500 });
+    }
+
     const prompt = `You are an advanced AI designed to interpret video transcripts and generate detailed summaries. Your task is to provide a comprehensive explanation of the video content based on its transcript and the user-supplied context.
 
 Task Instructions:
@@ -50,15 +62,25 @@ Conclusion: Wrap up with how the content addresses the purpose and offers value 
 Here is the transcript: ${para}`;
     const result = await model.generateContent(prompt);
     const output = result.response.text();
-   console.log(result.response.text());
+    
     return NextResponse.json(output);
-
-   
-  
   } catch (error: any) {
-    console.log(error)
+    console.error('Transcript fetch error:', {
+      videoId,
+      errorMessage: error.message,
+      errorStack: error.stack,
+      errorName: error.name
+    });
+
+    if (error.message.includes('Could not get transcripts')) {
+      return NextResponse.json(
+        { error: 'Transcript not available for this video' },
+        { status: 404 }
+      );
+    }
+
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch transcript' },
+      { error: `Failed to fetch transcript: ${error.message}` },
       { status: 500 }
     );
   }
