@@ -18,7 +18,7 @@ interface TranscriptEntry {
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const videoId = searchParams.get('videoId');
-  const question = searchParams.get('question');
+  
 
   if (!videoId) {
     return NextResponse.json({ error: 'Video ID is required' }, { status: 400 });

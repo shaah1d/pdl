@@ -113,7 +113,7 @@ function ChatForm({ videoId }: ChatFormProps) {
                             name="chat"
                             render={({ field }) => (
                                 <FormItem>
-
+        <FormLabel>Type your msg here: </FormLabel>
                                     <FormControl>
                                         <Input
                                             placeholder="what is an offside?"
