@@ -49,7 +49,8 @@ export function ProfileForm({ onVideoIdUpdate }: { onVideoIdUpdate: (id: string)
 
             const response = await fetch(`/api/transcript?videoId=${videoId}`);
             if (!response.ok) {
-                throw new Error("Failed to fetch transcript");
+                const error = response.text();
+                throw new Error(`Failed to fetch transcript: ${error}`);
             }
 
             const data = await response.json();
@@ -118,9 +119,9 @@ export function ProfileForm({ onVideoIdUpdate }: { onVideoIdUpdate: (id: string)
             ) : (
                 <div className="m-8">
                     <iframe
-                    className="rounded-lg overflow-hidden"
-                        width="560"
-                        height="315"
+                    className="rounded-lg overflow-hidden shadow-lg"
+                        width="md:560 400"
+                        height="md:315 auto"
                         src={`https://www.youtube.com/embed/${id}`}
                         title="YouTube video player"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
