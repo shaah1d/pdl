@@ -49,7 +49,7 @@ export function ProfileForm({ onVideoIdUpdate }: { onVideoIdUpdate: (id: string)
 
             const response = await fetch(`/api/transcript?videoId=${videoId}`);
             if (!response.ok) {
-                const error = await esponse.text();
+                const error = await response.text();
                 throw new Error(`Failed to fetch transcript: ${error}`);
             }
 
