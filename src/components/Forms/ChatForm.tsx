@@ -45,6 +45,7 @@ function ChatForm({ videoId }: ChatFormProps) {
 
     const handleAskQuestion = async () => {
         setLoading(true);
+        form.reset();
         if (!question) {
             console.log("Please enter a question!");
             return;
@@ -80,6 +81,7 @@ function ChatForm({ videoId }: ChatFormProps) {
         }
         finally {
             setLoading(false);
+        
         }
     }
     return (

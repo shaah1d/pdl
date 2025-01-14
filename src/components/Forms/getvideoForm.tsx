@@ -45,7 +45,7 @@ export function ProfileForm({ onVideoIdUpdate }: { onVideoIdUpdate: (id: string)
                 throw new Error("Invalid YouTube URL");
             }
 
-            onVideoIdUpdate(videoId); // Pass videoId to parent
+            onVideoIdUpdate(videoId); 
 
             const response = await fetch(`/api/transcript?videoId=${videoId}`);
             if (!response.ok) {
@@ -119,9 +119,9 @@ export function ProfileForm({ onVideoIdUpdate }: { onVideoIdUpdate: (id: string)
             ) : (
                 <div className="m-8">
                     <iframe
-                    className="rounded-lg overflow-hidden shadow-lg"
-                        width="md:560 400"
-                        height="md:315 auto"
+                        className="rounded-lg overflow-hidden shadow-lg w-full h-auto  sm:w-[540px] sm:h-[315px] 
+             md:w-[640px] md:h-[360px]"
+                      
                         src={`https://www.youtube.com/embed/${id}`}
                         title="YouTube video player"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
