@@ -2,13 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { YoutubeTranscript } from 'youtube-transcript';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Ensure GEMINI_KEY is defined
-if (!process.env.GEMINI_KEY) {
-  throw new Error('GEMINI_KEY is not defined');
-}
-
-// Initialize Google Generative AI
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+const geminiKey = process.env.GEMINI_KEY as string;
+const genAI = new GoogleGenerativeAI(geminiKey);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 interface TranscriptEntry {
@@ -28,17 +23,13 @@ export async function GET(req: NextRequest) {
   try {
     console.log(`Fetching transcript for video: ${videoId}`);
     
-    // Fetch YouTube transcript
+
     const transcript: TranscriptEntry[] = await YoutubeTranscript.fetchTranscript(videoId);
     if (!transcript || transcript.length === 0) {
       return NextResponse.json({ error: 'No transcript available' }, { status: 404 });
     }
-
-    // Combine transcript text
     const transcriptText = transcript.map(entry => entry.text).join(" ");
-
-    // Generate content using Gemini API
-    console.log('Calling Gemini API for summary...');
+    
     const prompt = `
       You are an advanced AI designed to interpret video transcripts and generate detailed summaries. 
       Do not use any markdown syntax; instead, write headings plainly, e.g., "Introduction".

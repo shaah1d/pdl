@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { ProfileForm } from '~/components/Forms/getvideoForm'
 import ChatForm from '~/components/Forms/ChatForm';
-// import YouTubeVideoInfo from '~/components/Forms/Fetchyt';
+
 
 function Page() {
   const [videoId, setVideoId] = useState<string | null>(null);
@@ -21,7 +21,7 @@ function Page() {
          {videoId && <ChatForm videoId={videoId} />} 
        
        </div> 
-       {/* <YouTubeVideoInfo /> */}
+     
     </div>
   )
 }
