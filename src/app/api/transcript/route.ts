@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { YoutubeTranscript } from '@danielxceron/youtube-transcript';
+import { YoutubeTranscript } from '@danielxceronyoutube-transcript';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const geminiKey = process.env.GEMINI_KEY as string;
