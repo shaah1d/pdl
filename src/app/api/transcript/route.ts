@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { YoutubeTranscript } from 'youtube-transcript';
+import { YoutubeTranscript } from '@danielxceron/youtube-transcript';
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const geminiKey = process.env.GEMINI_KEY as string;
 const genAI = new GoogleGenerativeAI(geminiKey);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 interface TranscriptEntry {
   offset: number;
